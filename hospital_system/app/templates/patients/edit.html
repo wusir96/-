@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}编辑患者 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>编辑患者信息</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.patient_id.label(class="form-label") }}
+                        {{ form.patient_id(class="form-control", readonly=true) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control") }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.gender.label(class="form-label") }}
+                        {{ form.gender(class="form-select") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.birth_date.label(class="form-label") }}
+                        {{ form.birth_date(class="form-control", type="date") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.contact.label(class="form-label") }}
+                        {{ form.contact(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.address.label(class="form-label") }}
+                        {{ form.address(class="form-control", rows=3) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.insurance_number.label(class="form-label") }}
+                        {{ form.insurance_number(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.list_patients') }}" class="btn btn-secondary">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

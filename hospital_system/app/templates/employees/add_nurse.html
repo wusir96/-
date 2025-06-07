@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}添加护士信息 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>添加护士信息</h2>
+    <p class="lead">为员工 {{ employee.name }} ({{ employee.emp_id }}) 添加护士资质信息</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.emp_id.label(class="form-label") }}
+                        {{ form.emp_id(class="form-control", readonly=true) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.nursing_level.label(class="form-label") }}
+                        {{ form.nursing_level(class="form-control") }}
+                        {% if form.nursing_level.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.nursing_level.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.view_employee', emp_id=employee.emp_id) }}" class="btn btn-secondary">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

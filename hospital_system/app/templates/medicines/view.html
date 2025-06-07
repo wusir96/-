@@ -1,0 +1,121 @@
+{# filepath: d:\桌面\hospital_system\app\templates\medicines\view.html #}
+{% extends "base.html" %}
+
+{% block title %}药品详情 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center page-header">
+    <h2>药品详情</h2>
+    <div>
+        <a href="{{ url_for('main.edit_medicine', medicine_id=medicine.medicine_id) }}" class="btn btn-primary">编辑</a>
+        <a href="{{ url_for('main.list_medicines') }}" class="btn btn-secondary">返回列表</a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>基本信息</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>药品ID：</strong> {{ medicine.medicine_id }}</p>
+                <p><strong>药品名称：</strong> {{ medicine.name }}</p>
+                <p><strong>规格：</strong> {{ medicine.specification }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>生产厂家：</strong> {{ medicine.manufacturer }}</p>
+                <p><strong>单价：</strong> {{ medicine.price }} 元</p>
+                <p><strong>库存量：</strong> {{ medicine.stock_quantity }}</p>
+                <p class="{% if medicine.stock_quantity < 10 %}text-danger{% endif %}">
+                    <strong>库存状态：</strong>
+                    {% if medicine.stock_quantity <= 0 %}
+                        <span class="badge bg-danger">缺货</span>
+                    {% elif medicine.stock_quantity < 10 %}
+                        <span class="badge bg-warning">库存不足</span>
+                    {% else %}
+                        <span class="badge bg-success">库存充足</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>价格变更历史</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>旧价格(元)</th>
+                    <th>新价格(元)</th>
+                    <th>变更幅度</th>
+                    <th>变更时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in price_logs %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ log.old_price }}</td>
+                    <td>{{ log.new_price }}</td>
+                    <td>
+                        {% set change_rate = ((log.new_price - log.old_price) / log.old_price * 100)|round(2) %}
+                        {% if change_rate > 0 %}
+                            <span class="text-danger">+{{ change_rate }}%</span>
+                        {% elif change_rate < 0 %}
+                            <span class="text-success">{{ change_rate }}%</span>
+                        {% else %}
+                            <span class="text-muted">0%</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ log.change_date }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">暂无价格变更记录</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4>使用情况</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>处方ID</th>
+                    <th>处方开具时间</th>
+                    <th>开具医生</th>
+                    <th>使用数量</th>
+                    <th>用法用量</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in prescription_details %}
+                <tr>
+                    <td>{{ detail.prescription_id }}</td>
+                    <td>{{ detail.prescription.issue_time }}</td>
+                    <td>{{ detail.usage }}</td>
+                    <td>{{ detail.quantity }}</td>
+                    <td>{{ detail.usage }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">该药品暂无使用记录</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

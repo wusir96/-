@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}处方管理 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center page-header">
+    <h2>处方管理</h2>
+    <a href="{{ url_for('main.add_prescription') }}" class="btn btn-success">添加处方</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>处方ID</th>
+                    <th>开具医生</th>
+                    <th>所属科室</th>
+                    <th>开具时间</th>
+                    <th>总金额(元)</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prescription in prescriptions %}
+                <tr>
+                    <td>{{ prescription.prescription_id }}</td>
+                    <td>{{ prescription.doctor_name }}</td>
+                    <td>{{ prescription.dept_name }}</td>
+                    <td>{{ prescription.issue_time }}</td>
+                    <td>{{ prescription.total_amount }}</td>
+                    <td>
+                        <a href="{{ url_for('main.prescription_detail', prescription_id=prescription.prescription_id) }}" class="btn btn-sm btn-info">详情</a>
+                        <form method="POST" action="{{ url_for('main.delete_prescription', prescription_id=prescription.prescription_id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger delete-btn">删除</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">暂无处方记录</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

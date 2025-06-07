@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}添加员工 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>添加员工</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.emp_id.label(class="form-label") }}
+                        {{ form.emp_id(class="form-control") }}
+                        {% if form.emp_id.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.emp_id.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control") }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.gender.label(class="form-label") }}
+                        {{ form.gender(class="form-select") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.birth_date.label(class="form-label") }}
+                        {{ form.birth_date(class="form-control", type="date") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.contact.label(class="form-label") }}
+                        {{ form.contact(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label") }}
+                        {{ form.title(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.hire_date.label(class="form-label") }}
+                        {{ form.hire_date(class="form-control", type="date") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.dept_id.label(class="form-label") }}
+                        {{ form.dept_id(class="form-control") }}
+                        <small class="text-muted">请输入有效的科室ID</small>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.list_employees') }}" class="btn btn-secondary">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

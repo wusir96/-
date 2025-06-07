@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}处方详情 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>处方详情</h2>
+    <p>处方ID: {{ prescription.prescription_id }} | 开具时间: {{ prescription.issue_time }}</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>处方药品列表</h5>
+            </div>
+            <div class="card-body">
+                {% if details %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>药品名称</th>
+                            <th>数量</th>
+                            <th>用法用量</th>
+                            <th>单价(元)</th>
+                            <th>小计(元)</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detail in details %}
+                        <tr>
+                            <td>{{ detail.name }}</td>
+                            <td>{{ detail.quantity }}</td>
+                            <td>{{ detail.usage }}</td>
+                            <td>{{ detail.price }}</td>
+                            <td>{{ detail.total_price }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('main.delete_prescription_detail', detail_id=detail.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger delete-btn">删除</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-end"><strong>总计:</strong></td>
+                            <td><strong>{{ prescription.total_amount }}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                {% else %}
+                <p class="text-center">此处方尚未添加药品</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>添加药品</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.medicine_id.label(class="form-label") }}
+                        {{ form.medicine_id(class="form-control") }}
+                        <small class="text-muted">请输入有效的药品ID</small>
+                        {% if form.medicine_id.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.medicine_id.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.quantity.label(class="form-label") }}
+                        {{ form.quantity(class="form-control", type="number", min="1") }}
+                        <small class="text-muted">添加时触发器会检查库存是否足够</small>
+                        {% if form.quantity.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.quantity.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.usage.label(class="form-label") }}
+                        {{ form.usage(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.list_prescriptions') }}" class="btn btn-secondary">返回列表</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>处方信息</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>处方ID:</strong> {{ prescription.prescription_id }}</p>
+                <p><strong>开具医生:</strong> {{ prescription.doctor.employee.name }}</p>
+                <p><strong>所属科室:</strong> {{ prescription.doctor.employee.department.dept_name }}</p>
+                <p><strong>开具时间:</strong> {{ prescription.issue_time }}</p>
+                <p><strong>总金额:</strong> {{ prescription.total_amount }} 元</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>关联医疗记录</h5>
+            </div>
+            <div class="card-body">
+                {% if prescription.medical_record %}
+                    <p><strong>就诊记录ID:</strong> {{ prescription.medical_record.record_id }}</p>
+                    <p><strong>患者姓名:</strong> {{ prescription.medical_record.patient.name }}</p>
+                    <p><strong>就诊时间:</strong> {{ prescription.medical_record.visit_time }}</p>
+                    <p><strong>诊断结果:</strong> {{ prescription.medical_record.diagnosis }}</p>
+                {% else %}
+                    <p class="text-center">无关联的医疗记录</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 药品ID输入自动完成
+    const medicineInput = document.getElementById('medicine_id');
+    if (medicineInput) {
+        medicineInput.addEventListener('focus', function() {
+            // 这里可以添加AJAX请求获取药品列表
+            console.log('可以在这里添加药品ID自动完成功能');
+        });
+    }
+    
+    // 数量输入校验
+    const quantityInput = document.getElementById('quantity');
+    if (quantityInput) {
+        quantityInput.addEventListener('input', function() {
+            if (this.value <= 0) {
+                this.setCustomValidity('数量必须大于0');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

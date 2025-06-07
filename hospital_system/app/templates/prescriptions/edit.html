@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}编辑处方 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>编辑处方</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.prescription_id.label(class="form-label") }}
+                        {{ form.prescription_id(class="form-control", readonly=true) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.doctor_id.label(class="form-label") }}
+                        {{ form.doctor_id(class="form-control", readonly=true) }}
+                        <small class="text-muted">医生ID不可更改</small>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.total_amount.label(class="form-label") }}
+                        {{ form.total_amount(class="form-control", type="number", step="0.01") }}
+                        {% if form.total_amount.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.total_amount.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.prescription_detail', prescription_id=prescription.prescription_id) }}" class="btn btn-secondary">返回详情</a>
+                        <a href="{{ url_for('main.list_prescriptions') }}" class="btn btn-outline-secondary">返回列表</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>操作说明</h5>
+            </div>
+            <div class="card-body">
+                <p>1. 处方基本信息修改后，可以在详情页面添加或删除药品</p>
+                <p>2. 如需更改处方中的药品，请先删除后重新添加</p>
+                <p>3. 添加药品时系统会自动检查库存是否充足</p>
+                <p>4. 删除处方时，系统会自动处理相关记录，确保数据一致性</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

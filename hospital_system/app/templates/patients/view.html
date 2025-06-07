@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}患者详情 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center page-header">
+    <h2>患者详情</h2>
+    <div>
+        <a href="{{ url_for('main.edit_patient', patient_id=patient.patient_id) }}" class="btn btn-primary">编辑</a>
+        <a href="{{ url_for('main.list_patients') }}" class="btn btn-secondary">返回列表</a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>基本信息</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>患者ID：</strong> {{ patient.patient_id }}</p>
+                <p><strong>姓名：</strong> {{ patient.name }}</p>
+                <p><strong>性别：</strong> {{ '男' if patient.gender == 'M' else '女' }}</p>
+                <p><strong>出生日期：</strong> {{ patient.birth_date }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>联系方式：</strong> {{ patient.contact }}</p>
+                <p><strong>地址：</strong> {{ patient.address }}</p>
+                <p><strong>医保号：</strong> {{ patient.insurance_number }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4>就诊记录</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>记录ID</th>
+                    <th>就诊时间</th>
+                    <th>诊断医生</th>
+                    <th>诊断结果</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in patient.medical_records %}
+                <tr>
+                    <td>{{ record.record_id }}</td>
+                    <td>{{ record.visit_time }}</td>
+                    <td>{{ record.doctor.employee.name }}</td>
+                    <td>{{ record.diagnosis }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-info">详情</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">该患者暂无就诊记录</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

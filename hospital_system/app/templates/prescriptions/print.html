@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}打印处方 - 医院信息管理系统{% endblock %}
+
+{% block extra_css %}
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        .print-container {
+            padding: 20px;
+        }
+        .table {
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+        }
+    }
+    .prescription-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .prescription-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+    .doctor-signature {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="no-print mb-3">
+    <a href="{{ url_for('main.prescription_detail', prescription_id=prescription.prescription_id) }}" class="btn btn-secondary">返回详情</a>
+    <button class="btn btn-primary" onclick="window.print()">打印处方</button>
+</div>
+
+<div class="print-container">
+    <div class="prescription-header">
+        <h2>医院处方单</h2>
+        <p>处方编号：{{ prescription.prescription_id }}</p>
+    </div>
+
+    <div class="prescription-info">
+        <div>
+            <p><strong>患者姓名：</strong>{{ prescription.medical_record.patient.name if prescription.medical_record else '未关联患者' }}</p>
+            <p><strong>性别：</strong>{{ '男' if prescription.medical_record and prescription.medical_record.patient.gender == 'M' else '女' if prescription.medical_record else '未知' }}</p>
+            <p><strong>年龄：</strong>{{ prescription.medical_record.patient.birth_date.strftime('%Y年') if prescription.medical_record and prescription.medical_record.patient.birth_date else '未知' }}</p>
+        </div>
+        <div>
+            <p><strong>开具日期：</strong>{{ prescription.issue_time.strftime('%Y年%m月%d日') }}</p>
+            <p><strong>处方类型：</strong>普通处方</p>
+            <p><strong>科室：</strong>{{ prescription.doctor.employee.department.dept_name }}</p>
+        </div>
+    </div>
+
+    <div>
+        <p><strong>诊断：</strong>{{ prescription.medical_record.diagnosis if prescription.medical_record else '未记录' }}</p>
+    </div>
+
+    <div class="mt-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>药品名称</th>
+                    <th>规格</th>
+                    <th>数量</th>
+                    <th>用法用量</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in details %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ detail.name }}</td>
+                    <td>{{ detail.medicine.specification }}</td>
+                    <td>{{ detail.quantity }}</td>
+                    <td>{{ detail.usage }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">暂无药品</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="doctor-signature">
+        <div>
+            <p><strong>医师签名：</strong>_________________</p>
+        </div>
+        <div>
+            <p><strong>药师签名：</strong>_________________</p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <p class="text-center">特别注意：处方有效期为3天，请患者按时取药</p>
+    </div>
+</div>
+{% endblock %}

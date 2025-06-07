@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}患者管理 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center page-header">
+    <h2>患者管理</h2>
+    <a href="{{ url_for('main.add_patient') }}" class="btn btn-success">添加患者</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>患者ID</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>出生日期</th>
+                    <th>联系方式</th>
+                    <th>医保号</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in patients %}
+                <tr>
+                    <td>{{ patient.patient_id }}</td>
+                    <td>{{ patient.name }}</td>
+                    <td>{{ '男' if patient.gender == 'M' else '女' }}</td>
+                    <td>{{ patient.birth_date }}</td>
+                    <td>{{ patient.contact }}</td>
+                    <td>{{ patient.insurance_number }}</td>
+                    <td>
+                        <a href="{{ url_for('main.edit_patient', patient_id=patient.patient_id) }}" class="btn btn-sm btn-primary">编辑</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">暂无患者记录</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

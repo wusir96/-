@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded">
+    <h1 class="display-4">欢迎使用医院信息管理系统</h1>
+    <p class="lead">本系统提供了医院日常运营所需的各种管理功能，包括患者管理、医护人员管理、处方管理等。</p>
+    <hr class="my-4">
+    <p>请从上方导航栏选择要使用的功能模块。</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">患者管理</h5>
+                <p class="card-text">管理患者基本信息、病史、就诊记录等</p>
+                <a href="{{ url_for('main.list_patients') }}" class="btn btn-primary">进入</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">员工管理</h5>
+                <p class="card-text">管理医生、护士等员工信息</p>
+                <a href="{{ url_for('main.list_employees') }}" class="btn btn-primary">进入</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">科室管理</h5>
+                <p class="card-text">管理医院各部门信息及资源配置</p>
+                <a href="{{ url_for('main.list_departments') }}" class="btn btn-primary">进入</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">药品管理</h5>
+                <p class="card-text">管理药品库存、价格及使用情况</p>
+                <a href="{{ url_for('main.list_medicines') }}" class="btn btn-primary">进入</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">处方管理</h5>
+                <p class="card-text">管理医生开具的处方及药品配发</p>
+                <a href="{{ url_for('main.list_prescriptions') }}" class="btn btn-primary">进入</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

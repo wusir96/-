@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}添加科室 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>添加科室</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.dept_id.label(class="form-label") }}
+                        {{ form.dept_id(class="form-control") }}
+                        {% if form.dept_id.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.dept_id.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.dept_name.label(class="form-label") }}
+                        {{ form.dept_name(class="form-control") }}
+                        {% if form.dept_name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.dept_name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.location.label(class="form-label") }}
+                        {{ form.location(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.phone.label(class="form-label") }}
+                        {{ form.phone(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.manager_id.label(class="form-label") }}
+                        {{ form.manager_id(class="form-control") }}
+                        <small class="text-muted">请输入有效的员工ID</small>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.list_departments') }}" class="btn btn-secondary">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

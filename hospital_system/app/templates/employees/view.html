@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}员工详情 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center page-header">
+    <h2>员工详情</h2>
+    <div>
+        <a href="{{ url_for('main.edit_employee', emp_id=employee.emp_id) }}" class="btn btn-primary">编辑</a>
+        <a href="{{ url_for('main.list_employees') }}" class="btn btn-secondary">返回列表</a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>基本信息</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>员工ID：</strong> {{ employee.emp_id }}</p>
+                <p><strong>姓名：</strong> {{ employee.name }}</p>
+                <p><strong>性别：</strong> {{ '男' if employee.gender == 'M' else '女' }}</p>
+                <p><strong>出生日期：</strong> {{ employee.birth_date }}</p>
+                <p><strong>联系方式：</strong> {{ employee.contact }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>职称：</strong> {{ employee.title }}</p>
+                <p><strong>入职日期：</strong> {{ employee.hire_date }}</p>
+                <p><strong>所属科室：</strong> {{ employee.department.dept_name if employee.department else '未分配' }}</p>
+                <p><strong>员工类型：</strong> 
+                    {% if employee.doctor_info %}医生
+                    {% elif employee.nurse_info %}护士
+                    {% else %}行政人员
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if employee.doctor_info %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>医生信息</h4>
+    </div>
+    <div class="card-body">
+        <p><strong>专业领域：</strong> {{ employee.doctor_info.specialty }}</p>
+        <p><strong>执业证号：</strong> {{ employee.doctor_info.license_number }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4>处方记录</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>处方ID</th>
+                    <th>开具时间</th>
+                    <th>总金额</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prescription in employee.doctor_info.prescriptions %}
+                <tr>
+                    <td>{{ prescription.prescription_id }}</td>
+                    <td>{{ prescription.issue_time }}</td>
+                    <td>{{ prescription.total_amount }}</td>
+                    <td>
+                        <a href="{{ url_for('main.prescription_detail', prescription_id=prescription.prescription_id) }}" class="btn btn-sm btn-info">详情</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">该医生暂无处方记录</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if employee.nurse_info %}
+<div class="card">
+    <div class="card-header">
+        <h4>护士信息</h4>
+    </div>
+    <div class="card-body">
+        <p><strong>护理级别：</strong> {{ employee.nurse_info.nursing_level }}</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

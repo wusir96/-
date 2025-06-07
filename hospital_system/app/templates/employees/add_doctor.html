@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}添加医生信息 - 医院信息管理系统{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>添加医生信息</h2>
+    <p class="lead">为员工 {{ employee.name }} ({{ employee.emp_id }}) 添加医生资质信息</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.emp_id.label(class="form-label") }}
+                        {{ form.emp_id(class="form-control", readonly=true) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.specialty.label(class="form-label") }}
+                        {{ form.specialty(class="form-control") }}
+                        {% if form.specialty.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.specialty.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.license_number.label(class="form-label") }}
+                        {{ form.license_number(class="form-control") }}
+                        {% if form.license_number.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in form.license_number.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('main.view_employee', emp_id=employee.emp_id) }}" class="btn btn-secondary">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
